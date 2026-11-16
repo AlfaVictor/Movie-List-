@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>For my heroine</title>
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#1d1b19; --soft:#76706a; --line:#ebe5dc;
+    --accent:#c2553a; --accent-soft:#fbe9e3; --tint:#f1ece4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  html,body{overflow-x:hidden}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.45}
+  .page{max-width:720px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  h1{font-family:ui-serif,"New York",Georgia,serif;font-size:34px;line-height:1.15;font-weight:600;letter-spacing:-0.3px;padding:8px 4px 18px}
+
+  .bar{position:sticky;top:0;z-index:10;background:rgba(250,247,242,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);margin:0 -16px;padding:10px 16px 12px;border-bottom:1px solid var(--line)}
+  .moods{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 2px}
+  .moods::-webkit-scrollbar{display:none}
+  .mood{flex-shrink:0;height:38px;padding:0 15px;border-radius:19px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:15px;font-weight:500;cursor:pointer}
+  .mood.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .row{display:flex;gap:8px;margin-top:10px;align-items:center}
+  .seg{flex:1;min-width:0;display:flex;background:var(--tint);border-radius:10px;padding:3px}
+  .seg button{flex:1;height:34px;border:0;border-radius:8px;background:transparent;color:var(--ink);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+  .seg button.on{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  select{height:40px;border:0;border-radius:10px;background:var(--tint);color:var(--ink);font-family:inherit;font-size:16px;font-weight:500;padding:0 10px;-webkit-appearance:none;appearance:none}
+  .search{flex:1;min-width:0;width:100%;height:42px;border:0;border-radius:10px;background:var(--tint);color:var(--ink);font-family:inherit;font-size:16px;padding:0 14px;-webkit-appearance:none}
+  .search:focus{outline:2px solid var(--accent);outline-offset:-2px}
+  .surprise{height:42px;padding:0 14px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+  .status{display:flex;justify-content:space-between;align-items:center;color:var(--soft);font-size:14px;padding:16px 4px 4px}
+  .status label{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .status input{width:20px;height:20px;accent-color:var(--accent)}
+
+  h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);padding:26px 4px 8px}
+  .list{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .item{padding:16px;border-top:1px solid var(--line);display:flex;gap:14px;transition:background .3s}
+  .item:first-child{border-top:0}
+  .item.flash{background:var(--accent-soft)}
+  .check{flex-shrink:0;width:30px;height:30px;margin-top:1px;border-radius:50%;border:2px solid #cfc7bc;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .check svg{width:16px;height:16px;opacity:0}
+  .item.done .check{background:var(--accent);border-color:var(--accent)}
+  .item.done .check svg{opacity:1}
+  .body{flex:1;min-width:0}
+  .title{font-size:18px;font-weight:600;line-height:1.25}
+  .year{font-weight:400;color:var(--soft)}
+  .item.done .title{color:var(--soft);text-decoration:line-through}
+  .meta{font-size:14px;color:var(--soft);margin-top:2px}
+  .heavy{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px;margin-top:6px}
+  .blurb{font-size:15.5px;margin-top:6px;color:#3a3633}
+  .item.done .blurb{color:var(--soft)}
+  .foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+  .score{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border-radius:8px;background:var(--tint);color:var(--ink);font-size:14px;font-weight:600;text-decoration:none}
+  .score small{font-size:11px;font-weight:700;color:var(--soft)}
+  .svc{font-size:13px;color:var(--soft)}
+  .watch{margin-left:auto;display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:18px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;text-decoration:none}
+  .empty{text-align:center;color:var(--soft);padding:50px 0}
+  footer{text-align:center;color:#a39b91;font-size:12px;padding:30px 10px 0;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Here's a movie list for my heroine.</h1>
+
+  <div class="bar">
+    <div class="moods" id="moods"></div>
+    <div class="row">
+      <div class="seg" id="kinds">
+        <button class="on" data-k="">All</button><button data-k="M">Movies</button><button data-k="S">Shows</button>
+      </div>
+      <select id="sort" aria-label="Sort">
+        <option value="">By mood</option>
+        <option value="i">Top IMDb</option>
+        <option value="r">Top RT</option>
+      </select>
+    </div>
+    <div class="row">
+      <input class="search" id="search" type="search" placeholder="Search" autocomplete="off">
+      <button class="surprise" id="pick">Surprise me</button>
+    </div>
+  </div>
+
+  <div class="status">
+    <span id="tally"></span>
+    <label><input type="checkbox" id="hide"> Hide watched</label>
+  </div>
+
+  <div id="list"></div>
+  <p class="empty" id="empty" hidden>Nothing here. Try another filter.</p>
+
+  <footer>Ratings are approximate (IMDb out of 10, Rotten Tomatoes critics' score).<br>"Watch" opens JustWatch India for current streaming options.</footer>
+</div>
+
+<script>
+const MOODS = ["All","Dark & twisty","Mystery","True crime","Horror","Romance & comedy"];
+const H = "JioHotstar (HBO)", N = "Netflix", A = "Apple TV", P = "Prime Video";
+
+// k: M = movie, S = show · i: IMDb · r: Rotten Tomatoes · s: usual service · x: very intense
+const TITLES = [
+  // Dark & twisty
+  {t:"Taxi Driver",y:"1976",k:"M",g:"Psychological drama, crime",m:"Dark & twisty",i:"8.2",r:"89%",b:"A lonely Vietnam vet drives nights in 70s New York and slowly comes apart."},
+  {t:"Nightcrawler",y:"2014",k:"M",g:"Thriller, crime",m:"Dark & twisty",i:"7.8",r:"95%",b:"Jake Gyllenhaal hustles his way into filming crime scenes for TV news. Deeply creepy."},
+  {t:"American Psycho",y:"2000",k:"M",g:"Psychological horror, dark comedy",m:"Dark & twisty",i:"7.6",r:"69%",b:"A Wall Street banker obsessed with business cards, skincare and murder. Darkly funny."},
+  {t:"Identity",y:"2003",k:"M",g:"Mystery, psychological thriller",m:"Dark & twisty",i:"7.3",r:"63%",b:"Ten strangers stranded at a motel in a storm start dying one by one."},
+  {t:"The Usual Suspects",y:"1995",k:"M",g:"Crime, mystery",m:"Dark & twisty",i:"8.5",r:"89%",b:"Five crooks, one police lineup, and a twist people still talk about."},
+  {t:"Zodiac",y:"2007",k:"M",g:"Crime, mystery thriller",m:"Dark & twisty",i:"7.7",r:"90%",b:"The real hunt for the Zodiac killer, through the eyes of the people obsessed with it."},
+  {t:"Prisoners",y:"2013",k:"M",g:"Crime thriller",m:"Dark & twisty",i:"8.1",r:"81%",b:"Two girls go missing, and a desperate father takes matters into his own hands."},
+  {t:"Gone Girl",y:"2014",k:"M",g:"Psychological thriller",m:"Dark & twisty",i:"8.1",r:"88%",b:"A wife vanishes on their anniversary, and her husband looks guiltier by the day."},
+  {t:"Memento",y:"2000",k:"M",g:"Mystery, psychological thriller",m:"Dark & twisty",i:"8.4",r:"93%",b:"A man who can't form new memories hunts his wife's killer. Told backwards."},
+  {t:"Shutter Island",y:"2010",k:"M",g:"Psychological thriller",m:"Dark & twisty",i:"8.2",r:"68%",b:"A US marshal investigates a disappearance from an island asylum in 1954."},
+  {t:"The Silence of the Lambs",y:"1991",k:"M",g:"Crime thriller",m:"Dark & twisty",i:"8.6",r:"95%",b:"A young FBI trainee needs a cannibal psychiatrist's help to catch a serial killer."},
+  {t:"Black Swan",y:"2010",k:"M",g:"Psychological thriller",m:"Dark & twisty",i:"8.0",r:"85%",b:"A ballerina's pursuit of the perfect role starts to unravel her mind."},
+  {t:"3 Body Problem",y:"2024–",k:"S",g:"Sci-fi, mystery",m:"Dark & twisty",i:"7.5",r:"77%",b:"Scientists start dying as the laws of physics seem to break down.",s:N},
+  {t:"The Wire",y:"2002–08",k:"S",g:"Crime drama",m:"Dark & twisty",i:"9.3",r:"94%",b:"Baltimore's drug trade, from the street corners to city hall. Slow start, huge payoff.",s:H},
+  {t:"The Sopranos",y:"1999–2007",k:"S",g:"Crime drama",m:"Dark & twisty",i:"9.2",r:"92%",b:"A New Jersey mob boss starts seeing a therapist.",s:H},
+  {t:"House of Cards",y:"2013–18",k:"S",g:"Political thriller",m:"Dark & twisty",i:"8.6",r:"77%",b:"A ruthless congressman schemes his way to power. Seasons 1 and 2 are the best.",s:N},
+  {t:"Pluribus",y:"2025–",k:"S",g:"Sci-fi drama",m:"Dark & twisty",i:"8.1",r:"99%",b:"From the creator of Breaking Bad: the unhappiest person on Earth against a world that's suddenly far too happy.",s:A},
+  {t:"True Detective",y:"2014 · Season 1",k:"S",g:"Crime, mystery",m:"Dark & twisty",i:"8.9",r:"92%",b:"Two detectives, one ritual murder case, told across 17 years. Season 1 stands alone.",s:H},
+  {t:"Fargo",y:"2014–",k:"S",g:"Crime, dark comedy",m:"Dark & twisty",i:"8.9",r:"97%",b:"Midwestern crime stories with a pitch-black sense of humour. Each season stands alone."},
+
+  // Mystery
+  {t:"The Girl on the Train",y:"2016",k:"M",g:"Psychological thriller",m:"Mystery",i:"6.5",r:"44%",b:"A commuter watches a couple from her train every day, until the woman goes missing."},
+  {t:"The Girl with the Dragon Tattoo",y:"2011",k:"M",g:"Mystery thriller",m:"Mystery",i:"7.8",r:"86%",b:"A journalist and a brilliant hacker dig into a decades-old disappearance in a rich Swedish family.",x:1},
+  {t:"A Simple Favor",y:"2018",k:"M",g:"Mystery, dark comedy",m:"Mystery",i:"6.8",r:"84%",b:"A mommy vlogger's glamorous new best friend suddenly vanishes. Twisty and funny."},
+  {t:"Promising Young Woman",y:"2020",k:"M",g:"Revenge thriller",m:"Mystery",i:"7.5",r:"90%",b:"A med-school dropout leads a double life taking revenge on predatory men."},
+  {t:"Before I Go to Sleep",y:"2014",k:"M",g:"Mystery thriller",m:"Mystery",i:"6.3",r:"37%",b:"A woman wakes every day with no memory and starts to doubt her husband's story."},
+  {t:"I Care a Lot",y:"2020",k:"M",g:"Crime thriller, dark comedy",m:"Mystery",i:"6.3",r:"76%",b:"A con artist who preys on the elderly picks the wrong victim.",s:N},
+  {t:"Saltburn",y:"2023",k:"M",g:"Psychological thriller",m:"Mystery",i:"7.0",r:"71%",b:"A scholarship student spends the summer at his rich friend's estate. Things get strange.",s:P},
+  {t:"Glass Onion",y:"2022",k:"M",g:"Mystery comedy",m:"Mystery",i:"7.1",r:"92%",b:"Detective Benoit Blanc solves a murder on a tech billionaire's private island.",s:N},
+  {t:"Big Little Lies",y:"2017–19",k:"S",g:"Mystery drama",m:"Mystery",i:"8.5",r:"86%",b:"Three mothers in a wealthy beach town, and a death at a school fundraiser.",s:H},
+  {t:"Sharp Objects",y:"2018",k:"S",g:"Psychological thriller",m:"Mystery",i:"8.0",r:"92%",b:"A troubled reporter returns to her hometown to cover the murders of two girls.",s:H},
+  {t:"Killing Eve",y:"2018–22",k:"S",g:"Spy thriller, dark comedy",m:"Mystery",i:"8.2",r:"89%",b:"A bored MI5 officer and a stylish assassin become obsessed with each other."},
+  {t:"Mare of Easttown",y:"2021",k:"S",g:"Crime mystery",m:"Mystery",i:"8.4",r:"95%",b:"Kate Winslet as a small-town detective investigating a young mother's murder.",s:H},
+  {t:"The Undoing",y:"2020",k:"S",g:"Mystery thriller",m:"Mystery",i:"7.0",r:"74%",b:"A therapist's perfect Manhattan life falls apart after a violent death.",s:H},
+  {t:"You",y:"2018–25",k:"S",g:"Psychological thriller",m:"Mystery",i:"7.7",r:"88%",b:"A charming bookstore manager becomes dangerously obsessed with the women he falls for.",s:N},
+  {t:"A Good Girl's Guide to Murder",y:"2024–",k:"S",g:"Teen mystery",m:"Mystery",i:"7.3",r:"89%",b:"A schoolgirl reopens a closed murder case for her final-year project.",s:N},
+  {t:"Pretty Little Liars",y:"2010–17",k:"S",g:"Teen mystery",m:"Mystery",i:"7.4",r:"71%",b:"Four friends are tormented by an anonymous texter who knows all their secrets."},
+
+  // True crime
+  {t:"Catch Me If You Can",y:"2002",k:"M",g:"Crime drama",m:"True crime",i:"8.1",r:"96%",b:"A teenage con man poses as a pilot, a doctor and a lawyer, with the FBI on his tail."},
+  {t:"I, Tonya",y:"2017",k:"M",g:"Sports drama, dark comedy",m:"True crime",i:"7.5",r:"90%",b:"Figure skater Tonya Harding and the attack on her rival. Darkly funny."},
+  {t:"Extremely Wicked, Shockingly Evil and Vile",y:"2019",k:"M",g:"Crime drama",m:"True crime",i:"6.7",r:"56%",b:"Ted Bundy's story, told through the eyes of the girlfriend who didn't see it.",s:N},
+  {t:"The Good Nurse",y:"2022",k:"M",g:"Crime thriller",m:"True crime",i:"6.8",r:"77%",b:"A nurse starts to suspect her new colleague is behind a string of patient deaths.",s:N},
+  {t:"Monster",y:"2003",k:"M",g:"Crime drama",m:"True crime",i:"7.3",r:"82%",b:"Charlize Theron's Oscar-winning turn as serial killer Aileen Wuornos.",x:1},
+  {t:"Goodfellas",y:"1990",k:"M",g:"Mob drama",m:"True crime",i:"8.7",r:"94%",b:"The rise and fall of a real-life mobster over three decades."},
+  {t:"The Tinder Swindler",y:"2022",k:"M",g:"Documentary",m:"True crime",i:"7.1",r:"94%",b:"Women conned out of millions by a fake billionaire they met on Tinder.",s:N},
+  {t:"Abducted in Plain Sight",y:"2017",k:"M",g:"Documentary",m:"True crime",i:"6.8",r:"86%",b:"A family friend kidnaps their daughter, twice. Hard to believe it really happened.",s:N},
+  {t:"Unbelievable",y:"2019",k:"S",g:"Crime drama",m:"True crime",i:"8.4",r:"98%",b:"A teenager reports an assault and isn't believed. Years later, two detectives connect the dots.",s:N},
+  {t:"The Act",y:"2019",k:"S",g:"Crime drama",m:"True crime",i:"7.9",r:"90%",b:"Gypsy Rose Blanchard and the mother who convinced the world she was sick."},
+  {t:"Inventing Anna",y:"2022",k:"S",g:"Con-artist drama",m:"True crime",i:"6.8",r:"63%",b:"A fake German heiress cons her way through New York's elite.",s:N},
+  {t:"The People v. O.J. Simpson",y:"2016",k:"S",g:"Courtroom drama",m:"True crime",i:"8.4",r:"97%",b:"The trial of the century, from inside both legal teams.",q:"American Crime Story People v. O.J. Simpson"},
+  {t:"When They See Us",y:"2019",k:"S",g:"Drama",m:"True crime",i:"8.8",r:"96%",b:"Five Harlem teenagers wrongly convicted in the Central Park jogger case.",s:N,x:1},
+  {t:"Dahmer – Monster",y:"2022",k:"S",g:"Crime drama",m:"True crime",i:"7.8",r:"57%",b:"The crimes of Jeffrey Dahmer, and the failures that let him go on.",s:N,x:1,q:"Dahmer Monster"},
+  {t:"The Staircase",y:"2022",k:"S",g:"Crime drama",m:"True crime",i:"7.6",r:"86%",b:"A novelist's wife is found dead at the bottom of their staircase. Accident or murder?",s:H},
+  {t:"Don't F**k with Cats",y:"2019",k:"S",g:"Docuseries",m:"True crime",i:"7.6",r:"88%",b:"Internet sleuths track down a man posting animal cruelty videos, and it escalates.",s:N,q:"Don't F**k with Cats"},
+  {t:"Making a Murderer",y:"2015–18",k:"S",g:"Docuseries",m:"True crime",i:"8.5",r:"97%",b:"A man freed after 18 years in prison is charged with a brand-new murder.",s:N},
+  {t:"The Jinx",y:"2015–",k:"S",g:"Docuseries",m:"True crime",i:"8.6",r:"98%",b:"A New York real-estate heir, three deaths, and an unforgettable final episode.",s:H},
+
+  // Horror
+  {t:"Shaun of the Dead",y:"2004",k:"M",g:"Zombie comedy",m:"Horror",i:"7.9",r:"92%",b:"A slacker tries to sort his life out in the middle of a zombie outbreak."},
+  {t:"Zombieland",y:"2009",k:"M",g:"Zombie comedy",m:"Horror",i:"7.6",r:"90%",b:"A road trip across zombie-infested America, with strict rules for survival."},
+  {t:"Ready or Not",y:"2019",k:"M",g:"Horror comedy",m:"Horror",i:"6.8",r:"89%",b:"A bride's wedding night turns into a deadly game of hide-and-seek with her in-laws."},
+  {t:"Get Out",y:"2017",k:"M",g:"Horror thriller",m:"Horror",i:"7.8",r:"98%",b:"Meeting the girlfriend's parents goes very, very wrong. Smart and tense."},
+  {t:"Scream",y:"1996",k:"M",g:"Slasher, whodunit",m:"Horror",i:"7.4",r:"81%",b:"A masked killer who loves horror movies stalks a small-town teen. A great whodunit too."},
+  {t:"The Conjuring",y:"2013",k:"M",g:"Supernatural horror",m:"Horror",i:"7.5",r:"86%",b:"Paranormal investigators help a family terrorised by a presence in their farmhouse."},
+  {t:"The Others",y:"2001",k:"M",g:"Gothic ghost story",m:"Horror",i:"7.6",r:"83%",b:"A mother and her light-sensitive children in a dark, isolated mansion. A classic twist."},
+  {t:"A Quiet Place",y:"2018",k:"M",g:"Creature horror",m:"Horror",i:"7.5",r:"96%",b:"A family survives in total silence, hiding from creatures that hunt by sound."},
+  {t:"It",y:"2017",k:"M",g:"Supernatural horror",m:"Horror",i:"7.3",r:"86%",b:"A gang of misfit kids takes on a shape-shifting clown."},
+  {t:"Us",y:"2019",k:"M",g:"Horror thriller",m:"Horror",i:"6.8",r:"93%",b:"A family's beach holiday is invaded by their own doppelgängers."},
+  {t:"Barbarian",y:"2022",k:"M",g:"Horror, twisty",m:"Horror",i:"7.0",r:"92%",b:"A woman's Airbnb is double-booked by a stranger. Then it gets weird. Go in blind."},
+  {t:"Talk to Me",y:"2023",k:"M",g:"Supernatural horror",m:"Horror",i:"7.1",r:"94%",b:"Teenagers get hooked on a party trick that lets them contact spirits."},
+  {t:"Smile",y:"2022",k:"M",g:"Psychological horror",m:"Horror",i:"6.5",r:"80%",b:"A therapist starts seeing terrifying smiling figures after a patient's death."},
+  {t:"Weapons",y:"2025",k:"M",g:"Horror mystery",m:"Horror",i:"7.5",r:"94%",b:"One night, every child in a classroom but one vanishes at exactly the same time."},
+  {t:"Hereditary",y:"2018",k:"M",g:"Supernatural horror",m:"Horror",i:"7.3",r:"90%",b:"A family unravels after their secretive grandmother dies.",x:1},
+  {t:"Midsommar",y:"2019",k:"M",g:"Folk horror",m:"Horror",i:"7.1",r:"83%",b:"A grieving woman joins her boyfriend at a Swedish midsummer festival. Daylight horror.",x:1},
+  {t:"The Haunting of Hill House",y:"2018",k:"S",g:"Ghost story, family drama",m:"Horror",i:"8.6",r:"93%",b:"Siblings who grew up in a haunted house are still haunted as adults.",s:N},
+  {t:"The Haunting of Bly Manor",y:"2020",k:"S",g:"Gothic romance",m:"Horror",i:"7.4",r:"88%",b:"A young governess, two children and a haunted English estate. More romance than scares.",s:N},
+  {t:"Midnight Mass",y:"2021",k:"S",g:"Supernatural horror",m:"Horror",i:"7.7",r:"87%",b:"A charismatic priest arrives on a dying island, and miracles start happening.",s:N},
+  {t:"The Fall of the House of Usher",y:"2023",k:"S",g:"Gothic horror",m:"Horror",i:"8.0",r:"90%",b:"The heirs of a ruthless pharmaceutical dynasty start dying one by one.",s:N},
+  {t:"Yellowjackets",y:"2021–",k:"S",g:"Horror mystery",m:"Horror",i:"7.8",r:"94%",b:"A girls' football team stranded in the wilderness, and the secrets they still keep 25 years later."},
+  {t:"Stranger Things",y:"2016–25",k:"S",g:"Sci-fi horror",m:"Horror",i:"8.6",r:"91%",b:"Kids in 80s Indiana, a missing friend, and a girl with strange powers.",s:N},
+  {t:"From",y:"2022–",k:"S",g:"Horror mystery",m:"Horror",i:"7.7",r:"94%",b:"A town nobody can leave, and creatures that come out after dark."},
+
+  // Romance & comedy
+  {t:"Eternal Sunshine of the Spotless Mind",y:"2004",k:"M",g:"Romance, sci-fi, drama",m:"Romance & comedy",i:"8.3",r:"92%",b:"After a breakup, a couple has each other erased from memory. Strange and lovely."},
+  {t:"21 Jump Street",y:"2012",k:"M",g:"Action comedy",m:"Romance & comedy",i:"7.2",r:"85%",b:"Two clueless cops go undercover as high school students."},
+  {t:"22 Jump Street",y:"2014",k:"M",g:"Action comedy",m:"Romance & comedy",i:"7.0",r:"85%",b:"Same two cops, now undercover in college. Even sillier."},
+  {t:"Her",y:"2013",k:"M",g:"Romance, sci-fi, drama",m:"Romance & comedy",i:"8.0",r:"95%",b:"A lonely writer falls in love with his AI operating system."},
+  {t:"About Time",y:"2013",k:"M",g:"Romance, comedy, fantasy",m:"Romance & comedy",i:"7.8",r:"70%",b:"A young man finds out he can time-travel and uses it for love. A big comfort watch."},
+  {t:"10 Things I Hate About You",y:"1999",k:"M",g:"Teen rom-com",m:"Romance & comedy",i:"7.3",r:"71%",b:"Shakespeare in a 90s high school, with Heath Ledger at his most charming."},
+  {t:"When Harry Met Sally",y:"1989",k:"M",g:"Romantic comedy",m:"Romance & comedy",i:"7.7",r:"90%",b:"Can men and women ever just be friends? The rom-com that set the template."},
+  {t:"The Proposal",y:"2009",k:"M",g:"Romantic comedy",m:"Romance & comedy",i:"6.7",r:"45%",b:"A bossy editor bullies her assistant into a fake engagement to avoid deportation."},
+  {t:"Notting Hill",y:"1999",k:"M",g:"Romantic comedy",m:"Romance & comedy",i:"7.2",r:"84%",b:"A London bookshop owner and the most famous film star in the world."},
+  {t:"The Nice Guys",y:"2016",k:"M",g:"Crime comedy",m:"Romance & comedy",i:"7.4",r:"92%",b:"Two mismatched private eyes stumble through a case in 70s LA. Very funny."},
+  {t:"Ted Lasso",y:"2020–",k:"S",g:"Feel-good comedy",m:"Romance & comedy",i:"8.8",r:"90%",b:"An American football coach somehow ends up managing an English soccer team. Pure warmth.",s:A}
+];
+
+
+const TICK = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const store = {
+  get(){ try { return JSON.parse(localStorage.getItem("watched") || "[]"); } catch(e){ return []; } },
+  set(v){ try { localStorage.setItem("watched", JSON.stringify(v)); } catch(e){} }
+};
+let watched = new Set(store.get());
+let mood = "All", kind = "";
+const $ = id => document.getElementById(id);
+const enc = s => encodeURIComponent(s);
+
+MOODS.forEach(m => {
+  const b = document.createElement("button");
+  b.className = "mood" + (m === mood ? " on" : "");
+  b.textContent = m;
+  b.onclick = () => { mood = m; document.querySelectorAll(".mood").forEach(x => x.classList.toggle("on", x === b)); render(); window.scrollTo({top:0, behavior:"smooth"}); };
+  $("moods").appendChild(b);
+});
+document.querySelectorAll("#kinds button").forEach(b => b.onclick = () => {
+  kind = b.dataset.k;
+  document.querySelectorAll("#kinds button").forEach(x => x.classList.toggle("on", x === b));
+  render();
+});
+
+function item(x, i){
+  const q = x.q || x.t, yr = x.y.slice(0,4);
+  return `<div class="item${watched.has(x.t) ? " done" : ""}" data-i="${i}">
+    <button class="check" aria-label="Mark ${x.t} as watched">${TICK}</button>
+    <div class="body">
+      <div class="title">${x.t} <span class="year">${x.y}</span></div>
+      <div class="meta">${x.k === "S" ? "Show" : "Movie"} · ${x.g}</div>
+      ${x.x ? `<span class="heavy">Heavy watch</span>` : ""}
+      <p class="blurb">${x.b}</p>
+      <div class="foot">
+        <a class="score" href="https://www.imdb.com/find/?q=${enc(q + " " + yr)}" target="_blank" rel="noopener"><small>IMDb</small>${x.i}</a>
+        <a class="score" href="https://www.rottentomatoes.com/search?search=${enc(q)}" target="_blank" rel="noopener"><small>RT</small>${x.r}</a>
+        ${x.s ? `<span class="svc">${x.s}</span>` : ""}
+        <a class="watch" href="https://www.justwatch.com/in/search?q=${enc(q)}" target="_blank" rel="noopener">Watch</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function visible(){
+  const s = $("search").value.trim().toLowerCase(), hide = $("hide").checked;
+  return TITLES.map((x,i) => ({x,i})).filter(({x}) =>
+    (mood === "All" || x.m === mood) && (!kind || x.k === kind) &&
+    (!s || (x.t + " " + x.g + " " + x.m).toLowerCase().includes(s)) &&
+    (!hide || !watched.has(x.t)));
+}
+
+function render(){
+  const vis = visible(), sort = $("sort").value;
+  let html = "";
+  if (sort) {
+    vis.sort((a,b) => parseFloat(b.x[sort]) - parseFloat(a.x[sort]));
+    html = `<h2>Highest rated</h2><div class="list">${vis.map(v => item(v.x, v.i)).join("")}</div>`;
+  } else {
+    MOODS.slice(1).forEach(m => {
+      const g = vis.filter(v => v.x.m === m);
+      if (g.length) html += `<h2>${m} · ${g.length}</h2><div class="list">${g.map(v => item(v.x, v.i)).join("")}</div>`;
+    });
+  }
+  $("list").innerHTML = html;
+  $("empty").hidden = vis.length > 0;
+  const done = TITLES.filter(x => watched.has(x.t)).length;
+  $("tally").textContent = `${done} of ${TITLES.length} watched`;
+}
+
+$("list").addEventListener("click", e => {
+  const b = e.target.closest(".check"); if (!b) return;
+  const x = TITLES[b.closest(".item").dataset.i];
+  watched.has(x.t) ? watched.delete(x.t) : watched.add(x.t);
+  store.set([...watched]); render();
+});
+$("search").addEventListener("input", render);
+$("hide").addEventListener("change", render);
+$("sort").addEventListener("change", render);
+$("pick").addEventListener("click", () => {
+  let pool = visible().filter(v => !watched.has(v.x.t));
+  if (!pool.length) pool = visible();
+  if (!pool.length) return;
+  const p = pool[Math.floor(Math.random() * pool.length)];
+  const el = document.querySelector(`.item[data-i="${p.i}"]`);
+  el.scrollIntoView({behavior:"smooth", block:"center"});
+  el.classList.add("flash");
+  setTimeout(() => el.classList.remove("flash"), 2200);
+});
+
+render();
+</script>
+</body>
+</html>
